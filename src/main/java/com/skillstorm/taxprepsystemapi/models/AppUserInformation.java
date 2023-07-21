@@ -22,15 +22,11 @@ public class AppUserInformation {
     @Id
     private String ssn;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    private AppUser appUser;
-
     @OneToMany
     @JoinTable(
-            name = "app_user_information_form1099",
+            name = "app_user_information_tax_document",
             joinColumns = { @JoinColumn(name = "app_user_information_id")},
-            inverseJoinColumns = {@JoinColumn(name = "form1099_id")}
+            inverseJoinColumns = {@JoinColumn(name = "tax_document_id")}
     )
     private List<TaxDocument> taxDocuments = new ArrayList<>();
 
