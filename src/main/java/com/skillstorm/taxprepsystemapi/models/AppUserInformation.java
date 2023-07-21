@@ -20,7 +20,8 @@ import java.util.List;
 public class AppUserInformation {
 
     @Id
-    private String ssn;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToMany
     @JoinTable(

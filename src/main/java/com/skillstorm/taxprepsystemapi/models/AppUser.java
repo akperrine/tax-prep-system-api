@@ -34,12 +34,14 @@ public class AppUser {
     @Column(nullable = true)
     private Date dob;
 
+    @Column(nullable = true)
+    private String ssn;
+
     @OneToOne
     private Location location;
 
     @Column(nullable = false)
     private String password;
-
 
     @OneToOne(cascade = CascadeType.ALL)
     private AppUserInformation appUserInformation;
