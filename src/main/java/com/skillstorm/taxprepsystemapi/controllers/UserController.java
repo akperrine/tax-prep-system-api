@@ -2,12 +2,14 @@ package com.skillstorm.taxprepsystemapi.controllers;
 
 import com.skillstorm.taxprepsystemapi.dtos.in.AppUserDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.RegisterDto;
+import com.skillstorm.taxprepsystemapi.dtos.in.TaxDocumentDto;
 import com.skillstorm.taxprepsystemapi.services.TaxService;
 import com.skillstorm.taxprepsystemapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
@@ -68,7 +70,15 @@ public class UserController {
         }
     }
 
-    // @PostMapping(value = "/user/{id}/documents")
+    @PostMapping(value = "/user/{id}/document")
+    public ResponseEntity postUserTaxDocument(@PathVariable Long id, @RequestBody TaxDocumentDto taxDocumentDto) {
+        try {
+            return ResponseEntity.status(201).body(taxService.addTaxDocument(taxDocumentDto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping(value = "/user/{id}/documents")
     public ResponseEntity getUserTaxDocuments(@PathVariable Long id) {
         try {

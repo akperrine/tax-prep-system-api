@@ -1,6 +1,7 @@
 package com.skillstorm.taxprepsystemapi.services;
 
 
+import com.skillstorm.taxprepsystemapi.dtos.in.TaxDocumentDto;
 import com.skillstorm.taxprepsystemapi.exceptions.TaxDocumentNotFoundException;
 import com.skillstorm.taxprepsystemapi.exceptions.UserNotFoundException;
 import com.skillstorm.taxprepsystemapi.models.AppUser;
@@ -39,4 +40,7 @@ public class TaxService {
         return taxDocument.get();
     }
 
+    public TaxDocument addTaxDocument(TaxDocumentDto taxDocumentDto) {
+        return new TaxDocument();
+    }
 }
