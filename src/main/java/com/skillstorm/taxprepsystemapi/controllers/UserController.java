@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/user")
@@ -32,7 +34,7 @@ public class UserController {
 
 
     @GetMapping("/id/{id}")
-    public ResponseEntity getUserById(@PathVariable Long id) {
+    public ResponseEntity getUserById(@PathVariable BigInteger id) {
         try {
             return ResponseEntity.ok().body(userService.getUserById(id));
         } catch (Exception e) {
@@ -50,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/id/{id}")
-    public ResponseEntity editUserInformation(@PathVariable Long id, @RequestBody AppUserDto appUserDto) {
+    public ResponseEntity editUserInformation(@PathVariable BigInteger id, @RequestBody AppUserDto appUserDto) {
         try {
             return ResponseEntity.ok().body(userService.editUserInformation(appUserDto));
         } catch (Exception e) {
@@ -61,7 +63,7 @@ public class UserController {
 
 
     @DeleteMapping(value = "/id/{id}")
-    public ResponseEntity deleteUserById(@PathVariable Long id) {
+    public ResponseEntity deleteUserById(@PathVariable BigInteger id) {
         try {
             return ResponseEntity.ok().body(userService.deleteUser(id));
         } catch (Exception e) {
@@ -71,7 +73,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/{id}/document")
-    public ResponseEntity postUserTaxDocument(@PathVariable Long id, @RequestBody TaxDocumentDto taxDocumentDto) {
+    public ResponseEntity postUserTaxDocument(@PathVariable BigInteger id, @RequestBody TaxDocumentDto taxDocumentDto) {
         try {
             return ResponseEntity.status(201).body(taxService.addTaxDocument(taxDocumentDto));
         } catch (Exception e) {
@@ -80,7 +82,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/{id}/documents")
-    public ResponseEntity getUserTaxDocuments(@PathVariable Long id) {
+    public ResponseEntity getUserTaxDocuments(@PathVariable BigInteger id) {
         try {
             return ResponseEntity.ok().body(taxService.getTaxDocumentsByUserId(id));
         } catch (Exception e) {

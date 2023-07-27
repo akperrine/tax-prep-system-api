@@ -5,10 +5,7 @@ import com.skillstorm.taxprepsystemapi.dtos.in.RegisterDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.SignInDTO;
 import com.skillstorm.taxprepsystemapi.exceptions.*;
 import com.skillstorm.taxprepsystemapi.models.AppUser;
-import com.skillstorm.taxprepsystemapi.models.AppUserInformation;
 import com.skillstorm.taxprepsystemapi.models.Location;
-import com.skillstorm.taxprepsystemapi.models.TaxDocument;
-import com.skillstorm.taxprepsystemapi.repositories.AppUserInformationRepository;
 import com.skillstorm.taxprepsystemapi.repositories.AppUserRepository;
 import com.skillstorm.taxprepsystemapi.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +14,9 @@ import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.text.ParseException;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
@@ -29,8 +27,7 @@ public class UserService {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    @Autowired
-    private AppUserInformationRepository appUserInformationRepository;
+
 
     @Autowired
     private LocationRepository locationRepository;
@@ -50,7 +47,7 @@ public class UserService {
         }
     }
 
-    public com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto getUserById(Long id) throws UserNotFoundException {
+    public com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto getUserById(BigInteger id) throws UserNotFoundException {
         return new com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto(isUserExistsAndReturn(id));
     }
 
@@ -67,7 +64,8 @@ public class UserService {
                 .firstName(registerDto.getFirstName())
                 .lastName(registerDto.getLastName())
                 .password(new BCryptPasswordEncoder().encode(registerDto.getPassword()))
-                .appUserInformation(new AppUserInformation())
+                .taxDocuments(new ArrayList<>())
+                //.appUserInformation(new AppUserInformation())
                 .build();
 
         return new com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto(appUserRepository.save(newAppUser));
@@ -149,7 +147,7 @@ public class UserService {
 
 
     @Transactional
-    public Boolean deleteUser(Long id) throws UserNotFoundException {
+    public Boolean deleteUser(BigInteger id) throws UserNotFoundException {
         AppUser appUser = isUserExistsAndReturn(id);
         // removing location first
         locationRepository.delete(appUser.getLocation());
@@ -162,7 +160,7 @@ public class UserService {
 
 
     /*Helper functions*/
-    public AppUser isUserExistsAndReturn(Long appUserId) throws UserNotFoundException {
+    public AppUser isUserExistsAndReturn(BigInteger appUserId) throws UserNotFoundException {
         Optional<AppUser> userCheck = appUserRepository.findById(appUserId);
 
         if(!userCheck.isPresent()) {

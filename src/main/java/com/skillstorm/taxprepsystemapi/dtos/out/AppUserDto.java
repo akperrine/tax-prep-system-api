@@ -1,15 +1,13 @@
 package com.skillstorm.taxprepsystemapi.dtos.out;
 
 import com.skillstorm.taxprepsystemapi.models.AppUser;
-import com.skillstorm.taxprepsystemapi.models.AppUserInformation;
 import com.skillstorm.taxprepsystemapi.models.Location;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.skillstorm.taxprepsystemapi.models.TaxDocument;
+import lombok.*;
 
+import java.math.BigInteger;
 import java.util.Date;
-import java.util.Objects;
+import java.util.List;
 
 @Data
 @Builder
@@ -17,7 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class AppUserDto {
 
-    private Long id;
+    private BigInteger id;
 
     private String firstName;
 
@@ -31,8 +29,8 @@ public class AppUserDto {
 
     private Location location;
 
-    private AppUserInformation appUserInformation;
-
+    //private AppUserInformation appUserInformation;
+    private List<TaxDocument> taxDocuments;
 
     public AppUserDto(AppUser appUser) {
         setId(appUser.getId());
@@ -42,19 +40,7 @@ public class AppUserDto {
         setDob(appUser.getDob());
         setLocation(appUser.getLocation());
         setSsn(appUser.getSsn());
-        setAppUserInformation(appUser.getAppUserInformation());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AppUserDto that = (AppUserDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(dob, that.dob) && Objects.equals(ssn, that.ssn) && Objects.equals(location, that.location) && Objects.equals(appUserInformation, that.appUserInformation);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, dob, ssn, location, appUserInformation);
+        setTaxDocuments(appUser.getTaxDocuments());
+        //setAppUserInformation(appUser.getAppUserInformation());
     }
 }

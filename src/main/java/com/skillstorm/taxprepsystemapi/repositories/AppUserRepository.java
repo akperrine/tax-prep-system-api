@@ -1,12 +1,13 @@
 package com.skillstorm.taxprepsystemapi.repositories;
 
 import com.skillstorm.taxprepsystemapi.models.AppUser;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 @Repository
-public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+public interface AppUserRepository extends MongoRepository<AppUser, BigInteger> {
     Optional<AppUser> findByEmail(String email);
 }

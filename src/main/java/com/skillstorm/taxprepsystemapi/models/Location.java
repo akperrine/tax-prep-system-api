@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @Data
-@Entity
+@Document(collection = "location")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,20 +18,15 @@ public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private BigInteger id;
 
-    @Column(nullable = false)
     private String address;
 
-    @Column(nullable = true)
     private String address2;
 
-    @Column(nullable = false)
     private String city;
 
-    @Column(nullable = false)
     private String state;
 
-    @Column(nullable = false)
     private String zipcode;
 }

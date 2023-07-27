@@ -11,6 +11,7 @@ import com.skillstorm.taxprepsystemapi.repositories.TaxDocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -22,16 +23,16 @@ public class TaxService {
     @Autowired
     private TaxDocumentRepository taxDocumentRepository;
 
-    public List<TaxDocument> getTaxDocumentsByUserId(Long userId) throws UserNotFoundException {
+    public List<TaxDocument> getTaxDocumentsByUserId(BigInteger userId) throws UserNotFoundException {
         Optional<AppUser> appUser = appUserRepository.findById(userId);
         if(!appUser.isPresent()) {
             throw new UserNotFoundException();
         }
 
-        return appUser.get().getAppUserInformation().getTaxDocuments();
+        return appUser.get().getTaxDocuments();
     }
 
-    public TaxDocument getTaxDocumentById(Long taxDocumentId) throws TaxDocumentNotFoundException {
+    public TaxDocument getTaxDocumentById(BigInteger taxDocumentId) throws TaxDocumentNotFoundException {
         Optional<TaxDocument> taxDocument = taxDocumentRepository.findById(taxDocumentId);
         if(!taxDocument.isPresent()) {
             throw new TaxDocumentNotFoundException();

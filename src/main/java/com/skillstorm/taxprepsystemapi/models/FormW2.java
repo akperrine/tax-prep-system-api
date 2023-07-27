@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Entity
+@Document
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,20 +20,14 @@ public class FormW2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private BigInteger id;
 
-    @Column(nullable = false)
+    //XX-XXXXXXX
+    private String employerEIN;
+
     private Double income;
 
-    @OneToOne
+    private Double withheld;
+
     private Location location;
-
-    @OneToMany
-    @JoinTable(
-            name = "formw2_deduction",
-            joinColumns = { @JoinColumn(name = "formw2_id")},
-            inverseJoinColumns = {@JoinColumn(name = "deduction_id")}
-    )
-    private List<Deduction> deductions = new ArrayList<>();
-
 }
