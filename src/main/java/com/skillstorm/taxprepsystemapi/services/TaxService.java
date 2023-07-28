@@ -1,6 +1,7 @@
 package com.skillstorm.taxprepsystemapi.services;
 
 
+import com.github.javafaker.App;
 import com.skillstorm.taxprepsystemapi.dtos.in.TaxDocumentDto;
 import com.skillstorm.taxprepsystemapi.exceptions.TaxDocumentNotFoundException;
 import com.skillstorm.taxprepsystemapi.exceptions.UserNotFoundException;
@@ -43,5 +44,10 @@ public class TaxService {
 
     public TaxDocument addTaxDocument(TaxDocumentDto taxDocumentDto) {
         return new TaxDocument();
+    }
+
+    public Double calculateUserTaxes(BigInteger userId) {
+        Optional<AppUser> appUser = appUserRepository.findById(userId);
+        return 0d;
     }
 }
