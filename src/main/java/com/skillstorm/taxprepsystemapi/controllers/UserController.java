@@ -3,6 +3,7 @@ package com.skillstorm.taxprepsystemapi.controllers;
 import com.skillstorm.taxprepsystemapi.dtos.in.AppUserDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.RegisterDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.TaxDocumentDto;
+import com.skillstorm.taxprepsystemapi.services.DocumentService;
 import com.skillstorm.taxprepsystemapi.services.TaxService;
 import com.skillstorm.taxprepsystemapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class UserController {
 
     @Autowired
     private TaxService taxService;
+
+    @Autowired
+    private DocumentService documentService;
 
     @PostMapping(value = "register")
     public ResponseEntity registerUser(@RequestBody RegisterDto registerDto) {
@@ -89,7 +93,15 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    // @GetMapping(value = "/user/{id}/document/id/{id}")
+
+    @GetMapping(value = "/user/{id}/document/id/{id}")
+    public ResponseEntity getUserTaxDocumentById(@PathVariable BigInteger userId, @PathVariable BigInteger docId) {
+        try {
+            return ResponseEntity.ok().body(documentService.getTaxDocumentById(userId, docId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     // @PutMapping(value = "/user/{id}/document/id/{id}")
     // @DeleteMapping(value = "/user/{id}/documents")
     // @DeleteMapping(value = "/user/{id}/document/{id}")
