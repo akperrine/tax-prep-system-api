@@ -1,18 +1,27 @@
 package com.skillstorm.taxprepsystemapi;
 
 import com.github.javafaker.App;
+import com.skillstorm.taxprepsystemapi.controllers.TaxController;
 import com.skillstorm.taxprepsystemapi.dtos.in.RegisterDto;
 import com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto;
+import com.skillstorm.taxprepsystemapi.enums.FilingStatus;
+import com.skillstorm.taxprepsystemapi.exceptions.UserExistsException;
 import com.skillstorm.taxprepsystemapi.models.AppUser;
+import com.skillstorm.taxprepsystemapi.models.FormW2;
 import com.skillstorm.taxprepsystemapi.models.Location;
+import com.skillstorm.taxprepsystemapi.models.TaxDocument;
 import com.skillstorm.taxprepsystemapi.repositories.AppUserRepository;
+import com.skillstorm.taxprepsystemapi.services.TaxService;
 import com.skillstorm.taxprepsystemapi.services.UserService;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
@@ -27,6 +36,13 @@ class TaxPrepSystemApiApplicationTests {
 
     @Autowired
     private AppUserRepository appUserRepository;
+
+
+    @Autowired
+    private TaxService taxService;
+
+    @Autowired
+    private TaxController taxController;
 
     RegisterDto newRegisterDto = RegisterDto.builder()
             .firstName("Sam")
@@ -69,12 +85,24 @@ class TaxPrepSystemApiApplicationTests {
         }
     }
 
-    @AfterAll
-    public static void sleeping() {
-        while(true) {
 
-        }
-    }
+    /*@Test
+    public void taxDocumentTest() throws UserExistsException, ParseException {
+
+        TaxDocument taxDocument = TaxDocument.builder()
+                .filed(new Date())
+                .filingStatus(FilingStatus.FILED)
+                .formW2s(Arrays.asList(FormW2.builder()
+                        .employerEIN("34872394872")
+                        .income(10000d)
+                        .build()))
+                .build();
+
+        AppUserDto newUser = userService.registerUser(newRegisterDto);
+
+        taxService.calculateUserTaxes()
+
+    }*/
 
 
 

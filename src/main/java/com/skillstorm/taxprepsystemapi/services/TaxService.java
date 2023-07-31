@@ -3,6 +3,8 @@ package com.skillstorm.taxprepsystemapi.services;
 
 import com.github.javafaker.App;
 import com.skillstorm.taxprepsystemapi.dtos.in.TaxDocumentDto;
+import com.skillstorm.taxprepsystemapi.enums.FilingStatus;
+import com.skillstorm.taxprepsystemapi.exceptions.NegativeIncomeException;
 import com.skillstorm.taxprepsystemapi.exceptions.TaxDocumentNotFoundException;
 import com.skillstorm.taxprepsystemapi.exceptions.UserNotFoundException;
 import com.skillstorm.taxprepsystemapi.models.AppUser;
@@ -44,8 +46,81 @@ public class TaxService {
         return taxDocument.get();
     }
 
-    public TaxDocument addTaxDocument(TaxDocumentDto taxDocumentDto) {
-        return new TaxDocument();
+    public TaxDocument addTaxDocument(TaxDocumentDto taxDocumentDto) throws UserNotFoundException, NegativeIncomeException {
+        Optional<AppUser> userCheck = appUserRepository.findById(taxDocumentDto.getUserId());
+        if(!userCheck.isPresent()) {
+            throw new UserNotFoundException();
+        }
+
+        // checking forms for neg amounts
+        for(FormW2 w2: taxDocumentDto.getFormW2s()) {
+            if(w2.getIncome() < 0) {
+                throw new NegativeIncomeException();
+            }
+        }
+
+        for(Form1099 form1099: taxDocumentDto.getForm1099s()) {
+            if(form1099.getIncome() < 0) {
+                throw new NegativeIncomeException();
+            }
+        }
+
+        TaxDocument newTaxDocument = TaxDocument.builder()
+                .filingStatus(FilingStatus.FILED)
+                .filed(new Date())
+                .maritalStatus(taxDocumentDto.getMaritalStatus())
+                .build();
+
+        TaxDocument savedTaxDocument = taxDocumentRepository.save(newTaxDocument);
+
+        AppUser appUser = userCheck.get();
+        List<TaxDocument> taxDocuments = appUser.getTaxDocuments();
+        taxDocuments.add(savedTaxDocument);
+        appUser.setTaxDocuments(taxDocuments);
+        appUserRepository.save(appUser);
+        return savedTaxDocument;
+
+    }
+
+    public Double reviewTaxesBeforeSubmit(TaxDocumentDto taxDocumentDto) {
+        Double totalIncome = 0d;
+
+        for(Form1099 f: taxDocumentDto.getForm1099s()) {
+            totalIncome += f.getIncome();
+        }
+
+        for(FormW2 f: taxDocumentDto.getFormW2s()) {
+            totalIncome += f.getIncome();
+        }
+
+        Double taxedTotalIncome = 0d;
+
+        switch (taxDocumentDto.getMaritalStatus()) {
+            case SINGLE:
+                taxedTotalIncome = calcSingleTax(totalIncome);
+                break;
+
+            case MARRIED_FILING_SEPARATELY:
+                taxedTotalIncome = calcMarriedFilingSeparately(totalIncome);
+                break;
+
+            case MARRIED_FILING_JOINTLY:
+                taxedTotalIncome = calcMarriedFilingJointly(totalIncome);
+                break;
+
+            case HEAD_OF_HOUSEHOLD:
+                taxedTotalIncome = calcHeadOfHousehold(totalIncome);
+                break;
+
+            case QUALIFYING_SURVIVING_SPOUSE:
+                taxedTotalIncome = calcMarriedFilingJointly(totalIncome);
+                break;
+
+            default:
+                break;
+        }
+
+        return taxedTotalIncome;
     }
 
     public Double calculateUserTaxes(BigInteger userId) throws UserNotFoundException {
@@ -76,15 +151,19 @@ public class TaxService {
                 break;
 
             case MARRIED_FILING_SEPARATELY:
+                taxedTotalIncome = calcMarriedFilingSeparately(totalIncome);
                 break;
 
             case MARRIED_FILING_JOINTLY:
+                taxedTotalIncome = calcMarriedFilingJointly(totalIncome);
                 break;
 
             case HEAD_OF_HOUSEHOLD:
+                taxedTotalIncome = calcHeadOfHousehold(totalIncome);
                 break;
 
             case QUALIFYING_SURVIVING_SPOUSE:
+                taxedTotalIncome = calcMarriedFilingJointly(totalIncome);
                 break;
 
             default:
@@ -180,6 +259,30 @@ public class TaxService {
     }
 
     public Double calcMarriedFilingJointly(Double totalIncome) {
+        Double taxedTotalIncome = 0d;
+        Double excess = 0d;
+        if(totalIncome < 22000d) {
+            taxedTotalIncome += .1d * totalIncome;
+        } else if(totalIncome >= 22000d && totalIncome < 89450d) {
+            excess = totalIncome - 22000d;
+            taxedTotalIncome += 2200d + (.12d * excess);
+        } else if(totalIncome >= 89450d && totalIncome < 190750d) {
+            excess = totalIncome - 89450d;
+            taxedTotalIncome += 10294d + (.22d * excess);
+        } else if(totalIncome >= 190750d && totalIncome < 364200d) {
+            excess = totalIncome - 190750d;
+            taxedTotalIncome += 32580d + (.24d * excess);
+        } else if(totalIncome >= 364200d && totalIncome < 462500d) {
+            excess = totalIncome - 364200d;
+            taxedTotalIncome += 74208d + (.32d * excess);
+        } else if (totalIncome >= 462500d && totalIncome < 693750d) {
+            excess = totalIncome - 462500d;
+            taxedTotalIncome += 105664d + (.35d * excess);
+        } else if (totalIncome >= 693750d) {
+            excess = totalIncome - 693750d;
+            taxedTotalIncome += 186601.50d + (.37 * excess);
+        }
 
+        return taxedTotalIncome;
     }
 }

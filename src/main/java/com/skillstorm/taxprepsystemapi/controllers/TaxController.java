@@ -1,5 +1,6 @@
 package com.skillstorm.taxprepsystemapi.controllers;
 
+import com.skillstorm.taxprepsystemapi.dtos.in.TaxDocumentDto;
 import com.skillstorm.taxprepsystemapi.services.TaxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,15 @@ public class TaxController {
     public ResponseEntity getTaxCalculation(@PathVariable BigInteger userId) {
         try {
             return ResponseEntity.ok().body(taxService.calculateUserTaxes(userId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/documents/calculate")
+    public ResponseEntity getTaxCalculationBeforeSubmit(@RequestBody TaxDocumentDto taxDocumentDto) {
+        try {
+            return ResponseEntity.ok().body(taxService.reviewTaxesBeforeSubmit(taxDocumentDto));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

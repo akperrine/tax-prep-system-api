@@ -76,7 +76,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/user/{id}/document")
+    @PostMapping(value = "/id/{id}/document")
     public ResponseEntity postUserTaxDocument(@PathVariable BigInteger id, @RequestBody TaxDocumentDto taxDocumentDto) {
         try {
             return ResponseEntity.status(201).body(taxService.addTaxDocument(taxDocumentDto));
@@ -94,7 +94,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/user/{id}/document/id/{id}")
+    @GetMapping(value = "/user/{id}/document/id/{docId}")
     public ResponseEntity getUserTaxDocumentById(@PathVariable BigInteger userId, @PathVariable BigInteger docId) {
         try {
             return ResponseEntity.ok().body(documentService.getTaxDocumentById(userId, docId));
