@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @Builder
 public class AppUserDto {
-    private BigInteger id;
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
@@ -22,7 +22,7 @@ public class AppUserDto {
 
     public static AppUserDto makeAppUserDto(AppUser appUser) {
         return AppUserDto.builder()
-            .id(appUser.getId())
+            .id(String.valueOf(appUser.getId()))
             .firstName(appUser.getFirstName())
             .lastName(appUser.getLastName())
             .email(appUser.getEmail())
