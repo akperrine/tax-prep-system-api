@@ -86,23 +86,24 @@ class TaxPrepSystemApiApplicationTests {
     }
 
 
-    /*@Test
-    public void taxDocumentTest() throws UserExistsException, ParseException {
-
-        TaxDocument taxDocument = TaxDocument.builder()
-                .filed(new Date())
-                .filingStatus(FilingStatus.FILED)
-                .formW2s(Arrays.asList(FormW2.builder()
-                        .employerEIN("34872394872")
-                        .income(10000d)
-                        .build()))
-                .build();
-
-        AppUserDto newUser = userService.registerUser(newRegisterDto);
-
-        taxService.calculateUserTaxes()
-
-    }*/
+//@Test
+//    public void taxDocumentTest() throws UserExistsException, ParseException {
+//
+//        TaxDocument taxDocument = TaxDocument.builder()
+//                .filed(new Date())
+//                .filingStatus(FilingStatus.FILED)
+//                .formW2s(Arrays.asList(FormW2.builder()
+//                        .employerEIN("34872394872")
+//                        .income(10000d)
+//                        .build()))
+//                .build();
+//
+//        AppUserDto newUser = userService.registerUser(newRegisterDto);
+//
+//        taxService.calculateUserTaxes()
+//
+//    }
+//
 
 
 

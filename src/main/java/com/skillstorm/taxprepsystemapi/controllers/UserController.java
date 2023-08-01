@@ -38,9 +38,9 @@ public class UserController {
 
 
     @GetMapping("/id/{id}")
-    public ResponseEntity getUserById(@PathVariable BigInteger id) {
+    public ResponseEntity getUserById(@PathVariable String id) {
         try {
-            return ResponseEntity.ok().body(userService.getUserById(id));
+            return ResponseEntity.ok().body(userService.getUserById(new BigInteger(id)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/id/{id}")
-    public ResponseEntity editUserInformation(@PathVariable BigInteger id, @RequestBody AppUserDto appUserDto) {
+    public ResponseEntity editUserInformation(@PathVariable String id, @RequestBody AppUserDto appUserDto) {
         try {
             return ResponseEntity.ok().body(userService.editUserInformation(appUserDto));
         } catch (Exception e) {
@@ -67,9 +67,9 @@ public class UserController {
 
 
     @DeleteMapping(value = "/id/{id}")
-    public ResponseEntity deleteUserById(@PathVariable BigInteger id) {
+    public ResponseEntity deleteUserById(@PathVariable String id) {
         try {
-            return ResponseEntity.ok().body(userService.deleteUser(id));
+            return ResponseEntity.ok().body(userService.deleteUser(new BigInteger(id)));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/id/{id}/document")
-    public ResponseEntity postUserTaxDocument(@PathVariable BigInteger id, @RequestBody TaxDocumentDto taxDocumentDto) {
+    public ResponseEntity postUserTaxDocument(@PathVariable String id, @RequestBody TaxDocumentDto taxDocumentDto) {
         try {
             return ResponseEntity.status(201).body(taxService.addTaxDocument(taxDocumentDto));
         } catch (Exception e) {
@@ -86,18 +86,18 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/{id}/documents")
-    public ResponseEntity getUserTaxDocuments(@PathVariable BigInteger id) {
+    public ResponseEntity getUserTaxDocuments(@PathVariable String id) {
         try {
-            return ResponseEntity.ok().body(taxService.getTaxDocumentsByUserId(id));
+            return ResponseEntity.ok().body(taxService.getTaxDocumentsByUserId(new BigInteger(id)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping(value = "/user/{id}/document/id/{docId}")
-    public ResponseEntity getUserTaxDocumentById(@PathVariable BigInteger userId, @PathVariable BigInteger docId) {
+    public ResponseEntity getUserTaxDocumentById(@PathVariable String userId, @PathVariable String docId) {
         try {
-            return ResponseEntity.ok().body(documentService.getTaxDocumentById(userId, docId));
+            return ResponseEntity.ok().body(documentService.getTaxDocumentById(new BigInteger(userId), new BigInteger(docId)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

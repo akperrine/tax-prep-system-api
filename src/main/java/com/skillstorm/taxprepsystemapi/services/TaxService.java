@@ -47,7 +47,7 @@ public class TaxService {
     }
 
     public TaxDocument addTaxDocument(TaxDocumentDto taxDocumentDto) throws UserNotFoundException, NegativeIncomeException {
-        Optional<AppUser> userCheck = appUserRepository.findById(taxDocumentDto.getUserId());
+        Optional<AppUser> userCheck = appUserRepository.findById(new BigInteger(taxDocumentDto.getUserId()));
         if(!userCheck.isPresent()) {
             throw new UserNotFoundException();
         }

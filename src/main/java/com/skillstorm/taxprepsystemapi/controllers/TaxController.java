@@ -17,9 +17,9 @@ public class TaxController {
     private TaxService taxService;
 
     @GetMapping("/calculate/user/{userId}")
-    public ResponseEntity getTaxCalculation(@PathVariable BigInteger userId) {
+    public ResponseEntity getTaxCalculation(@PathVariable String userId) {
         try {
-            return ResponseEntity.ok().body(taxService.calculateUserTaxes(userId));
+            return ResponseEntity.ok().body(taxService.calculateUserTaxes(new BigInteger(userId)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

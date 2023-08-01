@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TaxDocumentDto {
 
-    BigInteger userId;
+    String userId;
     MaritalStatus maritalStatus;
     List<FormW2> formW2s;
     List<Form1099> form1099s;

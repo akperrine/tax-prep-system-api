@@ -131,6 +131,10 @@ public class UserService {
         // set dob
         oldUser.setDob(appUserDto.getDob());
 
+        // setting first and last name
+        oldUser.setFirstName(appUserDto.getFirstName());
+        oldUser.setLastName(appUserDto.getLastName());
+
 
         // if the user hasn't added their ssn yet
         if(isNull(oldUser.getSsn())) {

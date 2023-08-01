@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AppUserDto {
 
-    private BigInteger id;
+    private String id;
 
     private String firstName;
 
@@ -33,7 +33,7 @@ public class AppUserDto {
     private List<TaxDocument> taxDocuments;
 
     public AppUserDto(AppUser appUser) {
-        setId(appUser.getId());
+        setId(String.valueOf(appUser.getId()));
         setFirstName(appUser.getFirstName());
         setLastName(appUser.getLastName());
         setEmail(appUser.getEmail());
