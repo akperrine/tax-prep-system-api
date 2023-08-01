@@ -86,7 +86,7 @@ public class UserService {
     public com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto editUserInformation(AppUserDto appUserDto) throws StateNotValidException, ZipcodeNotValidException, UserNotFoundException, LocationNotFoundException {
 
         // will throw an exception if a user is not found
-        AppUser oldUser = isUserExistsAndReturn(appUserDto.getId());
+        AppUser oldUser = isUserExistsAndReturn(new BigInteger(appUserDto.getId()));
 
         // checking state length
         if(appUserDto.getLocation().getState().length() != 2) {
