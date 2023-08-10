@@ -1,6 +1,6 @@
 package com.skillstorm.taxprepsystemapi.controllers;
 
-import com.skillstorm.taxprepsystemapi.dtos.in.AppUserDto;
+import com.skillstorm.taxprepsystemapi.dtos.in.AppUserInDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.RegisterDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.TaxDocumentDto;
 import com.skillstorm.taxprepsystemapi.services.DocumentService;
@@ -40,7 +40,7 @@ public class UserController {
     @GetMapping("/id/{id}")
     public ResponseEntity getUserById(@PathVariable String id) {
         try {
-            return ResponseEntity.ok().body(userService.getUserById(new BigInteger(id)));
+            return ResponseEntity.ok().body(userService.getUserById(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/id/{id}")
-    public ResponseEntity editUserInformation(@PathVariable String id, @RequestBody AppUserDto appUserDto) {
+    public ResponseEntity editUserInformation(@PathVariable String id, @RequestBody AppUserInDto appUserDto) {
         try {
             return ResponseEntity.ok().body(userService.editUserInformation(appUserDto));
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class UserController {
     @DeleteMapping(value = "/id/{id}")
     public ResponseEntity deleteUserById(@PathVariable String id) {
         try {
-            return ResponseEntity.ok().body(userService.deleteUser(new BigInteger(id)));
+            return ResponseEntity.ok().body(userService.deleteUser(id));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -88,7 +88,7 @@ public class UserController {
     @GetMapping(value = "/user/{id}/documents")
     public ResponseEntity getUserTaxDocuments(@PathVariable String id) {
         try {
-            return ResponseEntity.ok().body(taxService.getTaxDocumentsByUserId(new BigInteger(id)));
+            return ResponseEntity.ok().body(taxService.getTaxDocumentsByUserId(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -97,7 +97,7 @@ public class UserController {
     @GetMapping(value = "/user/{id}/document/id/{docId}")
     public ResponseEntity getUserTaxDocumentById(@PathVariable String userId, @PathVariable String docId) {
         try {
-            return ResponseEntity.ok().body(documentService.getTaxDocumentById(new BigInteger(userId), new BigInteger(docId)));
+            return ResponseEntity.ok().body(documentService.getTaxDocumentById(userId, docId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -1,8 +1,9 @@
 package com.skillstorm.taxprepsystemapi.services;
 
-import com.skillstorm.taxprepsystemapi.dtos.in.AppUserDto;
+import com.skillstorm.taxprepsystemapi.dtos.in.AppUserInDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.RegisterDto;
 import com.skillstorm.taxprepsystemapi.dtos.in.SignInDTO;
+import com.skillstorm.taxprepsystemapi.dtos.out.AppUserOutDto;
 import com.skillstorm.taxprepsystemapi.exceptions.*;
 import com.skillstorm.taxprepsystemapi.models.AppUser;
 import com.skillstorm.taxprepsystemapi.models.Location;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -50,12 +50,12 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto getUserById(BigInteger id) throws UserNotFoundException {
-        return new com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto(isUserExistsAndReturn(id));
+    public AppUserOutDto getUserById(String id) throws UserNotFoundException {
+        return new AppUserOutDto(isUserExistsAndReturn(id));
     }
 
     @Transactional
-    public com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto registerUser(RegisterDto registerDto) throws UserExistsException, ParseException {
+    public AppUserOutDto registerUser(RegisterDto registerDto) throws UserExistsException, ParseException {
         Optional<AppUser> emailCheck = appUserRepository.findByEmail(registerDto.getEmail());
 
         if (emailCheck.isPresent()) {
@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService {
                 //.appUserInformation(new AppUserInformation())
                 .build();
 
-        return new com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto(appUserRepository.save(newAppUser));
+        return new AppUserOutDto(appUserRepository.save(newAppUser));
     }
 
     public AppUser getUserByEmail(String email) throws UserNotFoundException {
@@ -86,75 +86,68 @@ public class UserService implements UserDetailsService {
 
     // The only validation will be whether State is not 2 chars and zipcode is 5 chars
     @Transactional
-    public com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto editUserInformation(AppUserDto appUserDto) throws StateNotValidException, ZipcodeNotValidException, UserNotFoundException, LocationNotFoundException {
+    public AppUserOutDto editUserInformation(AppUserInDto appUserInDto) throws StateNotValidException, ZipcodeNotValidException, UserNotFoundException, LocationNotFoundException {
 
         // will throw an exception if a user is not found
-        AppUser oldUser = isUserExistsAndReturn(new BigInteger(appUserDto.getId()));
+        AppUser oldUser = isUserExistsAndReturn(appUserInDto.getId());
 
-        // checking state length
-        if(appUserDto.getLocation().getState().length() != 2) {
-            throw new StateNotValidException();
-        }
 
-        // checking zipcode length
-        if(appUserDto.getLocation().getZipcode().length() != 5) {
-            throw new ZipcodeNotValidException();
-        }
+        if (!isNull(appUserInDto.getLocation())) {
 
-        // checking if this the first time a user has provided a location
-        if(isNull(appUserDto.getLocation().getId())) {
+            // checking state length
+            if (appUserInDto.getLocation().getState().length() != 2) {
+                throw new StateNotValidException();
+            }
+
+            // checking zipcode length
+            if (appUserInDto.getLocation().getZipcode().length() != 5) {
+                throw new ZipcodeNotValidException();
+            }
 
             Location newLocation = Location.builder()
-                    .address(appUserDto.getLocation().getAddress())
-                    .address2(appUserDto.getLocation().getAddress2())
-                    .city(appUserDto.getLocation().getCity())
-                    .state(appUserDto.getLocation().getState())
-                    .zipcode(appUserDto.getLocation().getZipcode())
+                    .address(appUserInDto.getLocation().getAddress())
+                    .address2(appUserInDto.getLocation().getAddress2())
+                    .city(appUserInDto.getLocation().getCity())
+                    .state(appUserInDto.getLocation().getState())
+                    .zipcode(appUserInDto.getLocation().getZipcode())
                     .build();
-            Location updatedNewLocation = locationRepository.save(newLocation);
-            oldUser.setLocation(updatedNewLocation);
-        } else {
-
-            // location has an id attached meaning it isn't new
-            Location location = isLocationExistsAndReturn(appUserDto.getLocation());
-            Location updatedLocation = locationRepository.save(appUserDto.getLocation());
-            oldUser.setLocation(updatedLocation);
+            oldUser.setLocation(newLocation);
         }
 
 
         // check if password was sent if it was then make sure to encode and add back to appUser
-        if(!isNull(appUserDto.getPassword())) {
+        if (!isNull(appUserInDto.getPassword())) {
             // passwords don't match, must be changing it
-            if(!new BCryptPasswordEncoder().matches(appUserDto.getPassword(), oldUser.getPassword())) {
-                oldUser.setPassword(new BCryptPasswordEncoder().encode(appUserDto.getPassword()));
-            };
+            if (!new BCryptPasswordEncoder().matches(appUserInDto.getPassword(), oldUser.getPassword())) {
+                oldUser.setPassword(new BCryptPasswordEncoder().encode(appUserInDto.getPassword()));
+            }
         }
 
 
         // set dob
-        oldUser.setDob(appUserDto.getDob());
+        oldUser.setDob(appUserInDto.getDob());
 
         // setting first and last name
-        oldUser.setFirstName(appUserDto.getFirstName());
-        oldUser.setLastName(appUserDto.getLastName());
+        oldUser.setFirstName(appUserInDto.getFirstName());
+        oldUser.setLastName(appUserInDto.getLastName());
 
 
         // if the user hasn't added their ssn yet
-        if(isNull(oldUser.getSsn())) {
-            oldUser.setSsn(appUserDto.getSsn());
+        if (isNull(oldUser.getSsn())) {
+            oldUser.setSsn(appUserInDto.getSsn());
         } else {
             // if user changed their ssn
-            if(!oldUser.getSsn().equals(appUserDto.getSsn())) {
-                oldUser.setSsn(appUserDto.getSsn());
+            if (!oldUser.getSsn().equals(appUserInDto.getSsn())) {
+                oldUser.setSsn(appUserInDto.getSsn());
             }
         }
 
-        return new com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto(appUserRepository.save(oldUser));
+        return new AppUserOutDto(appUserRepository.save(oldUser));
     }
 
 
     @Transactional
-    public Boolean deleteUser(BigInteger id) throws UserNotFoundException {
+    public Boolean deleteUser(String id) throws UserNotFoundException {
         AppUser appUser = isUserExistsAndReturn(id);
         // removing location first
         locationRepository.delete(appUser.getLocation());
@@ -167,7 +160,7 @@ public class UserService implements UserDetailsService {
 
 
     /*Helper functions*/
-    public AppUser isUserExistsAndReturn(BigInteger appUserId) throws UserNotFoundException {
+    public AppUser isUserExistsAndReturn(String appUserId) throws UserNotFoundException {
         Optional<AppUser> userCheck = appUserRepository.findById(appUserId);
 
         if(!userCheck.isPresent()) {
@@ -177,15 +170,6 @@ public class UserService implements UserDetailsService {
         return userCheck.get();
     }
 
-    public Location isLocationExistsAndReturn(Location location) throws LocationNotFoundException {
-        Optional<Location> locationCheck = locationRepository.findById(location.getId());
-
-        if(!locationCheck.isPresent()) {
-            throw new LocationNotFoundException();
-        }
-
-        return location;
-    }
 
 
     @Override

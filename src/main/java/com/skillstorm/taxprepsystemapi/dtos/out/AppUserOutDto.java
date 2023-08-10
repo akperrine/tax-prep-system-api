@@ -5,7 +5,6 @@ import com.skillstorm.taxprepsystemapi.models.Location;
 import com.skillstorm.taxprepsystemapi.models.TaxDocument;
 import lombok.*;
 
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUserDto {
+public class AppUserOutDto {
 
     private String id;
 
@@ -32,7 +31,7 @@ public class AppUserDto {
     //private AppUserInformation appUserInformation;
     private List<TaxDocument> taxDocuments;
 
-    public AppUserDto(AppUser appUser) {
+    public AppUserOutDto(AppUser appUser) {
         setId(String.valueOf(appUser.getId()));
         setFirstName(appUser.getFirstName());
         setLastName(appUser.getLastName());

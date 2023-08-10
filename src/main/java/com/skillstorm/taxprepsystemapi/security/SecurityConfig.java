@@ -21,43 +21,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // @formatter:off
         http
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                /*.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .ignoringAntMatchers("/register")
-                .and()
-
+                .and()*/
+                .csrf().disable()
                 .authorizeHttpRequests(
                         (authorize) ->
                                 authorize
                                         .mvcMatchers(HttpMethod.GET, "/login").permitAll()
                                         .mvcMatchers(HttpMethod.POST, "/register").permitAll()
-                                        .mvcMatchers("/user/**").authenticated()
-                                        .mvcMatchers("/tax/**").authenticated()
+                                        .mvcMatchers("/user/**").permitAll()
+                                        .mvcMatchers("/tax/**").permitAll()
                 )
-
-                .cors(cors -> {
-                    cors.configurationSource(request -> {
-
-                        // configuring how we want to handle cors
-                        CorsConfiguration corsConfig = new CorsConfiguration();
-                        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:5173"));               // what origins are allowed
-                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));        // what http methods are allowed
-                        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-XSRF-TOKEN"));       // what headers are allowed
-                        corsConfig.setAllowCredentials(true);                                               // allow cookies to be sent to backend
-                        corsConfig.setMaxAge(3600L);                                                        // how long to cache the cors preflight request (OPTIONS)
-
-                        // setting which endpoints to apply the above cors configurations to
-                        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                        source.registerCorsConfiguration("/**", corsConfig);
-
-                        return corsConfig;
-                    });
-                })
+                .cors()
+                .and()
                 .httpBasic();
 
-
-        // @formatter:on
         return http.build();
     }
 

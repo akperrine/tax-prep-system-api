@@ -24,7 +24,7 @@ public class DocumentService {
     @Autowired
     private TaxDocumentRepository taxDocumentRepository;
 
-    public TaxDocument getTaxDocumentById(BigInteger userId, BigInteger docId) throws UserNotFoundException, TaxDocumentNotFoundException {
+    public TaxDocument getTaxDocumentById(String userId, String docId) throws UserNotFoundException, TaxDocumentNotFoundException {
         Optional<AppUser> userCheck = appUserRepository.findById(userId);
 
         if(!userCheck.isPresent()) {
@@ -41,7 +41,7 @@ public class DocumentService {
         return taxDocuments.get(0);
     }
 
-    /*public TaxDocument postTaxDocument(BigInteger userId, TaxDocument taxDocument) throws UserNotFoundException {
+    /*public TaxDocument postTaxDocument(String userId, TaxDocument taxDocument) throws UserNotFoundException {
         Optional<AppUser> userCheck = appUserRepository.findById(userId);
 
         if(!userCheck.isPresent()) {

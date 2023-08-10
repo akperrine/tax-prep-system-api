@@ -1,8 +1,6 @@
 package com.skillstorm.taxprepsystemapi.controllers;
 
-import com.skillstorm.taxprepsystemapi.dtos.in.SignInDTO;
-import com.skillstorm.taxprepsystemapi.dtos.out.AppUserDto;
-import com.skillstorm.taxprepsystemapi.exceptions.UserNotFoundException;
+import com.skillstorm.taxprepsystemapi.dtos.in.RegisterDto;
 import com.skillstorm.taxprepsystemapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +20,11 @@ import java.security.Principal;
 import java.util.Map;
 
 @Controller
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", originPatterns = "http://localhost:5173")
 public class LoginController {
 
     @Autowired(required = true)
     private OAuth2AuthorizedClientService clientService;
-
     @Autowired
     private UserService userService;
 
@@ -49,6 +46,16 @@ public class LoginController {
     public ResponseEntity login(Principal principal, Authentication auth) {
         try {
             return ResponseEntity.ok().body(principal);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/register")
+    @ResponseBody
+    public ResponseEntity registerUser(@RequestBody RegisterDto registerDto) {
+        try {
+            return ResponseEntity.status(201).body(userService.registerUser(registerDto));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -28,7 +28,7 @@ public class TaxService {
     @Autowired
     private TaxDocumentRepository taxDocumentRepository;
 
-    public List<TaxDocument> getTaxDocumentsByUserId(BigInteger userId) throws UserNotFoundException {
+    public List<TaxDocument> getTaxDocumentsByUserId(String userId) throws UserNotFoundException {
         Optional<AppUser> appUser = appUserRepository.findById(userId);
         if(!appUser.isPresent()) {
             throw new UserNotFoundException();
@@ -47,7 +47,7 @@ public class TaxService {
     }
 
     public TaxDocument addTaxDocument(TaxDocumentDto taxDocumentDto) throws UserNotFoundException, NegativeIncomeException {
-        Optional<AppUser> userCheck = appUserRepository.findById(new BigInteger(taxDocumentDto.getUserId()));
+        Optional<AppUser> userCheck = appUserRepository.findById(taxDocumentDto.getUserId());
         if(!userCheck.isPresent()) {
             throw new UserNotFoundException();
         }
@@ -125,7 +125,7 @@ public class TaxService {
         return taxedTotalIncome;
     }
 
-    public Double calculateUserTaxes(BigInteger userId) throws UserNotFoundException {
+    public Double calculateUserTaxes(String userId) throws UserNotFoundException {
         Optional<AppUser> userCheck = appUserRepository.findById(userId);
 
         if(!userCheck.isPresent()) {

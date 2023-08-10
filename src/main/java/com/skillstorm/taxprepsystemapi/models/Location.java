@@ -10,15 +10,10 @@ import javax.persistence.*;
 import java.math.BigInteger;
 
 @Data
-@Document(collection = "location")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Location {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
 
     private String address;
 

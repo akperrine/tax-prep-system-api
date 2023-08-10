@@ -23,7 +23,7 @@ public class TaxDocument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    private String id;
 
     private FilingStatus filingStatus;
 
