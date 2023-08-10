@@ -9,6 +9,9 @@ import com.skillstorm.taxprepsystemapi.models.Location;
 import com.skillstorm.taxprepsystemapi.repositories.AppUserRepository;
 import com.skillstorm.taxprepsystemapi.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +25,7 @@ import java.util.Optional;
 import static java.util.Objects.isNull;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private AppUserRepository appUserRepository;
@@ -185,4 +188,9 @@ public class UserService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser user = appUserRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email + " not found."));
+        return user;
+    }
 }
