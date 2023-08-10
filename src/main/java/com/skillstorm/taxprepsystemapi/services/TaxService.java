@@ -68,6 +68,8 @@ public class TaxService {
         TaxDocument newTaxDocument = TaxDocument.builder()
                 .filingStatus(FilingStatus.FILED)
                 .filed(new Date())
+                .formW2s(taxDocumentDto.getFormW2s())
+                .form1099s(taxDocumentDto.getForm1099s())
                 .maritalStatus(taxDocumentDto.getMaritalStatus())
                 .build();
 
