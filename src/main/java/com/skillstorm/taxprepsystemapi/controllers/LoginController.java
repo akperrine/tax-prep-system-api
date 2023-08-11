@@ -23,23 +23,8 @@ import java.util.Map;
 @CrossOrigin(allowCredentials = "true", originPatterns = "http://localhost:5173")
 public class LoginController {
 
-    @Autowired(required = true)
-    private OAuth2AuthorizedClientService clientService;
     @Autowired
     private UserService userService;
-
-
-    /*@PostMapping("/login")
-    @ResponseBody
-    public ResponseEntity login(@RequestBody SignInDTO signInDTO) {
-        try {
-            return ResponseEntity.ok().body(new AppUserDto(userService.getAuth(signInDTO)));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }*/
 
     @GetMapping("/login")
     @ResponseBody
@@ -59,38 +44,5 @@ public class LoginController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-
-
-    @GetMapping("/userinfo")
-    @ResponseBody
-    public Map<String, Object> userInfo(@AuthenticationPrincipal OAuth2User user) {
-        return user.getAttributes();
-    }
-
-    @GetMapping("/accessToken")
-    @ResponseBody
-    public String accessToken(Authentication auth, HttpServletResponse response) {
-
-        if(auth instanceof OAuth2AuthenticationToken) {
-
-            OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) auth;
-
-            OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(authToken.getAuthorizedClientRegistrationId(), authToken.getName());
-
-
-            Cookie cookie = new Cookie("Access Token", client.getAccessToken().getTokenValue());
-            cookie.isHttpOnly();
-            response.addCookie(cookie);
-
-            return client.getAccessToken().getTokenValue();
-        }
-
-        return "";
-    }
-
-    @GetMapping("/signin")
-    public RedirectView redirectView() {
-        return new RedirectView("http://localhost:5173");
     }
 }

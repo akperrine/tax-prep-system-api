@@ -47,11 +47,10 @@ public class AppUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        /*Set<SimpleGrantedAuthority> authoritySet = new HashSet<>();
+        Set<SimpleGrantedAuthority> authoritySet = new HashSet<>();
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
         authoritySet.add(authority);
-        return authoritySet;*/
-        return null;
+        return authoritySet;
     }
 
     @Override

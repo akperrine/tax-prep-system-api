@@ -20,7 +20,7 @@ public class FormW2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    private String id;
 
     //XX-XXXXXXX
     private String employerEIN;

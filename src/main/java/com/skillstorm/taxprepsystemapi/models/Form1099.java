@@ -11,7 +11,6 @@ import java.math.BigInteger;
 
 @Data
 @Document
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class Form1099 {
 
     @Id
     @GeneratedValue
-    private BigInteger id;
+    private String id;
 
     // XXX-XX-XXXX
     private String payerTIN;

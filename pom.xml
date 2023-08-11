@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.skillstorm</groupId>
     <artifactId>tax-prep-system-api</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <name>tax-prep-system-api</name>
     <description>tax-prep-system-api</description>
     <properties>

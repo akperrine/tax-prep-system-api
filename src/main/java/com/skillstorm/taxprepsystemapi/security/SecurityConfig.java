@@ -20,20 +20,28 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-//new
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true)
-@CrossOrigin(allowCredentials = "true")
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
-                .sessionManagement(session -> session.sessionCreationPolicy((SessionCreationPolicy.STATELESS)))
+                .cors(cors -> {
+                    cors.configurationSource(request -> {
+
+                        // configuring how we want to handle cors
+                        CorsConfiguration corsConfig = new CorsConfiguration();
+                        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://s3-ssessums.s3-website-us-east-1.amazonaws.com"));
+                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-XSRF-TOKEN"));
+                        corsConfig.setAllowCredentials(true);
+                        corsConfig.setMaxAge(3600L);
+
+                        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                        source.registerCorsConfiguration("/**", corsConfig);
+
+                        return corsConfig;
+                    });
+                })
                 .authorizeHttpRequests(
                         (authorize) ->
                                 authorize

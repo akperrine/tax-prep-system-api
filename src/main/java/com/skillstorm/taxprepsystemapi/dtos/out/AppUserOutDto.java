@@ -28,7 +28,6 @@ public class AppUserOutDto {
 
     private Location location;
 
-    //private AppUserInformation appUserInformation;
     private List<TaxDocument> taxDocuments;
 
     public AppUserOutDto(AppUser appUser) {
@@ -40,6 +39,5 @@ public class AppUserOutDto {
         setLocation(appUser.getLocation());
         setSsn(appUser.getSsn());
         setTaxDocuments(appUser.getTaxDocuments());
-        //setAppUserInformation(appUser.getAppUserInformation());
     }
 }

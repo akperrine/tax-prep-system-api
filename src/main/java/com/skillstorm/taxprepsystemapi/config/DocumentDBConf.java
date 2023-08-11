@@ -1,4 +1,3 @@
-/*
 package com.skillstorm.taxprepsystemapi.config;
 
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
@@ -39,4 +38,3 @@ public class DocumentDBConf {
         return new MongoPropertiesClientSettingsBuilderCustomizer(properties, null);
     }
 }
-*/

@@ -31,10 +31,6 @@ public class UserService implements UserDetailsService {
     private AppUserRepository appUserRepository;
 
 
-
-    @Autowired
-    private LocationRepository locationRepository;
-
     public AppUser getAuth(SignInDTO signInDTO) throws UserNotFoundException, WrongPasswordException {
         Optional<AppUser> userCheck = appUserRepository.findByEmail(signInDTO.getEmail());
         if (userCheck.isPresent()) {
@@ -68,7 +64,6 @@ public class UserService implements UserDetailsService {
                 .lastName(registerDto.getLastName())
                 .password(new BCryptPasswordEncoder().encode(registerDto.getPassword()))
                 .taxDocuments(new ArrayList<>())
-                //.appUserInformation(new AppUserInformation())
                 .build();
 
         return new AppUserOutDto(appUserRepository.save(newAppUser));
@@ -149,8 +144,6 @@ public class UserService implements UserDetailsService {
     @Transactional
     public Boolean deleteUser(String id) throws UserNotFoundException {
         AppUser appUser = isUserExistsAndReturn(id);
-        // removing location first
-        locationRepository.delete(appUser.getLocation());
         appUserRepository.delete(appUser);
         return true;
     }
